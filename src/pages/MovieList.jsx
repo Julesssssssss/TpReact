@@ -10,7 +10,7 @@ const MovieList = () => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const [category, setCategory] = React.useState("popular");
-  const [searchQuery, setSearchQuery] = React.useState(""); // Etat pour la recherche
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   const fetchMovies = async () => {
     try {
