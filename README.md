@@ -1,3 +1,9 @@
+# READ ME
+
+Website to browse in TMDB Api and search some films.
+To run website, just type "npm run dev" in the terminal while in the project folder
+Enjoy 😃
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
