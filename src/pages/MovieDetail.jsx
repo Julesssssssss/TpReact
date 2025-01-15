@@ -32,7 +32,7 @@ const MovieDetail = () => {
           throw new Error("Erreur lors de la récupération des acteurs");
         }
         const creditsData = await creditsResponse.json();
-        setActors(creditsData.cast.slice(0, 5));
+        setActors(creditsData.cast.slice(0, 10));
 
         const similarResponse = await fetch(
           `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${apiKey}`,
