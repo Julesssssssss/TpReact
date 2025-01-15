@@ -113,6 +113,7 @@
 
 .movie-image-container {
   width: 100%;
+  min-height: 404px;
   overflow: hidden;
   border-bottom: 1px solid #ddd;
 }

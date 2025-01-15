@@ -7,43 +7,87 @@ const MovieList = () => {
   const { apiKey } = useApi();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const [movies, setMovies] = React.useState([]);
+  const [searchResults, setSearchResults] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const [category, setCategory] = React.useState("popular");
   const [searchQuery, setSearchQuery] = React.useState("");
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] =
+    React.useState(searchQuery);
+  const [debounceTimeout, setDebounceTimeout] = React.useState(null);
+
+  React.useEffect(() => {
+    if (debouncedSearchQuery !== searchQuery) {
+      if (debounceTimeout) clearTimeout(debounceTimeout);
+      const timeout = setTimeout(() => {
+        setDebouncedSearchQuery(searchQuery);
+      }, 500);
+      setDebounceTimeout(timeout);
+    }
+
+    return () => {
+      if (debounceTimeout) clearTimeout(debounceTimeout);
+    };
+  }, [searchQuery]);
 
   React.useEffect(() => {
     setPage(1);
   }, [category]);
 
-  const fetchMovies = async () => {
-    try {
-      setLoading(true);
-      const url = `https://api.themoviedb.org/3/movie/${category}?api_key=${apiKey}&page=${page}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des films");
-      }
-
-      const { results, total_pages } = await response.json();
-      setMovies(results);
-      setTotalPages(total_pages);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
-
   React.useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        setLoading(true);
+        const url = `https://api.themoviedb.org/3/movie/${category}?api_key=${apiKey}&page=${page}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error("Erreur lors de la récupération des films");
+        }
+
+        const { results, total_pages } = await response.json();
+        setMovies(results);
+        setTotalPages(total_pages);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
     fetchMovies();
   }, [category, page, apiKey]);
 
-  const filteredMovies = movies.filter(movie => {
-    return movie.title.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  React.useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (!debouncedSearchQuery.trim()) {
+        setSearchResults([]);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${debouncedSearchQuery}&page=1`;
+        const response = await fetch(searchUrl);
+        if (!response.ok) {
+          throw new Error("Erreur lors de la recherche des films");
+        }
+
+        const { results, total_pages } = await response.json();
+        setSearchResults(results);
+        setTotalPages(total_pages);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    if (debouncedSearchQuery) {
+      fetchSearchResults();
+    }
+  }, [debouncedSearchQuery, apiKey]);
 
   const handleWishlistToggle = movie => {
     const isAlreadyInWishlist = wishlist.some(m => m.id === movie.id);
@@ -56,6 +100,8 @@ const MovieList = () => {
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Erreur: {error}</p>;
+
+  const displayedMovies = searchQuery.trim() ? searchResults : movies;
 
   return (
     <>
@@ -92,7 +138,7 @@ const MovieList = () => {
       </div>
 
       <div className="movie-popular-list-container">
-        {filteredMovies.map(movie => (
+        {displayedMovies.map(movie => (
           <div key={movie.id} className="movie-popular-container">
             <h2>{movie.title}</h2>
             <div className="movie-image-container">
@@ -120,23 +166,26 @@ const MovieList = () => {
           </div>
         ))}
       </div>
-      <div className="pagination-container">
-        <button
-          onClick={() => setPage(page - 1)}
-          disabled={page === 1}
-          className="pagination-button"
-        >
-          Précédent
-        </button>
-        <span>{`Page ${page} sur ${totalPages}`}</span>
-        <button
-          onClick={() => setPage(page + 1)}
-          disabled={page === totalPages}
-          className="pagination-button"
-        >
-          Suivant
-        </button>
-      </div>
+
+      {!searchQuery.trim() && (
+        <div className="pagination-container">
+          <button
+            onClick={() => setPage(page - 1)}
+            disabled={page === 1}
+            className="pagination-button"
+          >
+            Précédent
+          </button>
+          <span>{`Page ${page} sur ${totalPages}`}</span>
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={page === totalPages}
+            className="pagination-button"
+          >
+            Suivant
+          </button>
+        </div>
+      )}
     </>
   );
 };
