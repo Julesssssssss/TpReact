@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { useWishlist } from "../context/WishlistContext";
+import styles from "./navbar.module.css";
 
 const Navbar = () => {
   const { wishlist } = useWishlist();
@@ -12,7 +13,7 @@ const Navbar = () => {
         </li>
         <li>
           <Link to="/wishlist">
-            Wishlist <span className="wishlist-count">({wishlist.length})</span>
+            Wishlist <span className={styles.navbar}>({wishlist.length})</span>
           </Link>
         </li>
       </ul>

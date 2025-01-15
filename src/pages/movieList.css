@@ -1,10 +1,34 @@
 .movie-popular-list-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
   padding: 20px;
   justify-items: center;
   margin-top: 20px;
+}
+
+@media (max-width: 1200px) {
+  .movie-popular-list-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1000px) {
+  .movie-popular-list-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-popular-list-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-popular-list-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 .movie-popular-container {
@@ -101,4 +125,31 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 300px;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  margin: 0 10px;
+  font-size: 14px;
+}
+
+.pagination-button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #0056b3;
 }

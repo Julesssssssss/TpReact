@@ -11,19 +11,25 @@ const MovieList = () => {
   const [error, setError] = React.useState(null);
   const [category, setCategory] = React.useState("popular");
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [category]);
 
   const fetchMovies = async () => {
     try {
       setLoading(true);
-      const url = `https://api.themoviedb.org/3/movie/${category}?api_key=${apiKey}`;
+      const url = `https://api.themoviedb.org/3/movie/${category}?api_key=${apiKey}&page=${page}`;
       const response = await fetch(url);
-
       if (!response.ok) {
         throw new Error("Erreur lors de la récupération des films");
       }
 
-      const { results } = await response.json();
+      const { results, total_pages } = await response.json();
       setMovies(results);
+      setTotalPages(total_pages);
       setLoading(false);
     } catch (err) {
       setError(err.message);
@@ -33,7 +39,7 @@ const MovieList = () => {
 
   React.useEffect(() => {
     fetchMovies();
-  }, [category, apiKey]);
+  }, [category, page, apiKey]);
 
   const filteredMovies = movies.filter(movie => {
     return movie.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -113,6 +119,23 @@ const MovieList = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="pagination-container">
+        <button
+          onClick={() => setPage(page - 1)}
+          disabled={page === 1}
+          className="pagination-button"
+        >
+          Précédent
+        </button>
+        <span>{`Page ${page} sur ${totalPages}`}</span>
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={page === totalPages}
+          className="pagination-button"
+        >
+          Suivant
+        </button>
       </div>
     </>
   );
