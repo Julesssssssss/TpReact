@@ -1,5 +1,7 @@
 @import url(./pages/movieList.css);
 @import url(./pages/movieDetail.css);
+@import url(./pages/navbar.css);
+@import url(./pages/wishlist.css);
 h1 {
   color: red;
   text-align: center;

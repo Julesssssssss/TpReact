@@ -1,0 +1,30 @@
+.navbar {
+  background-color: #f8f8f8;
+  color: white;
+  padding: 10px 20px;
+}
+
+.navbar ul {
+  display: flex;
+  justify-content: flex-start;
+  list-style-type: none;
+}
+
+.navbar ul li {
+  margin-right: 20px;
+}
+
+.navbar ul li a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.navbar ul li a:hover {
+  text-decoration: underline;
+}
+
+.wishlist-count {
+  color: rgb(0, 0, 0);
+  font-size: 1rem;
+}
