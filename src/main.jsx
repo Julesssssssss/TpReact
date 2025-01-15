@@ -1,12 +1,12 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
-import { CartProvider } from "./_old/context/CartProvider.jsx";
+import { ApiProvider } from "./context/ApiContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <CartProvider>
+    <ApiProvider>
       <App />
-    </CartProvider>
+    </ApiProvider>
   </StrictMode>,
 );

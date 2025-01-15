@@ -1,13 +1,18 @@
+import { BrowserRouter as Router, Route, Routes } from "react-router";
 import "./app.css";
-import ProductList from "./_old/components/product/ProductList";
-import Cart from "./_old/components/product/Cart";
+import MovieList from "./pages/MovieList";
+import MovieDetail from "./pages/MovieDetail";
 
 const App = () => {
   return (
-    <div className="app">
-      <ProductList />
-      <Cart />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<MovieList />} />
+          <Route path="/movie/:id" element={<MovieDetail />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 
